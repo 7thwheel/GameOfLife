@@ -17,14 +17,14 @@ public class Console {
      */
     public static void main(String[] args) {
         ArrayList<Life> newGenerations = new ArrayList<Life>();
-//        newGenerations.add(new Life(6, 4));
-//        newGenerations.add(new Life(6, 5));
-//        newGenerations.add(new Life(6, 6));
-//        newGenerations.add(new Life(5, 5));
-//        newGenerations.add(new Life(11, 4));
-//        newGenerations.add(new Life(11, 5));
-//        newGenerations.add(new Life(11, 6));
-//        newGenerations.add(new Life(12, 5));
+        newGenerations.add(new Life(6, 4));
+        newGenerations.add(new Life(6, 5));
+        newGenerations.add(new Life(6, 6));
+        newGenerations.add(new Life(5, 5));
+        newGenerations.add(new Life(11, 4));
+        newGenerations.add(new Life(11, 5));
+        newGenerations.add(new Life(11, 6));
+        newGenerations.add(new Life(12, 5));
         newGenerations.add(new Life(5, 5));
         newGenerations.add(new Life(6, 5));
         newGenerations.add(new Life(7, 5));
