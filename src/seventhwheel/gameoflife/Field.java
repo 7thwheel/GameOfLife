@@ -32,10 +32,10 @@ public class Field {
         while(!livings.isEmpty()) {
             Life life = livings.pop();
 
-            //add a surviver to next-gen
+            //survivors go to next generation
             newGenerations.add(regulatePopulationDensity(life));
 
-            //add newborns to next-gen
+            //newborns go to next generation
             for (int i = 0; i < life.neighbors.length; i++) {
                 newGenerations.add(reproduct(life.neighbors[i]));
             }
