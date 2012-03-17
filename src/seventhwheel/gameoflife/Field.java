@@ -1,27 +1,26 @@
 package seventhwheel.gameoflife;
 
 import java.awt.Point;
+import java.util.ArrayList;
 import java.util.Stack;
-import java.util.Vector;
 
 public class Field {
 
     public final int maxCol;
     public final int maxRow;
     public Life[][] cells;
-    public Stack livings;
+    public Stack<Life> livings = new Stack<Life>();
 
     public Field(int maxCol, int maxRow) {
         this.maxCol = maxCol;
         this.maxRow = maxRow;
         cells = new Life[maxCol][maxRow];
-        livings = new Stack();
     }
 
-    public void init(Vector nextGenerations) {
+    public void init(ArrayList<Life> nextGenerations) {
         cells = new Life[maxCol][maxRow];
         for (int i = 0; i < nextGenerations.size(); i++) {
-            Life life = (Life) nextGenerations.get(i);
+            Life life = nextGenerations.get(i);
             if (setLifeAt(life)) {
                 livings.push(life);
             }
@@ -31,21 +30,21 @@ public class Field {
     public void next() {
         Lives newGenerations = new Lives();
         while(!livings.isEmpty()) {
-            Life life = (Life) livings.pop();
+            Life life = livings.pop();
 
-            //dead or alive
-            newGenerations.add(saveLife(life));
+            //add a surviver to next-gen
+            newGenerations.add(regulatePopulationDensity(life));
 
-            //誕生
+            //add newborns to next-gen
             for (int i = 0; i < life.neighbors.length; i++) {
-                newGenerations.add(giveBirth(life.neighbors[i]));
+                newGenerations.add(reproduct(life.neighbors[i]));
             }
         }
 
         init(newGenerations);
     }
 
-    Life giveBirth(Point point) {
+    Life reproduct(Point point) {
         if (getLifeAt(point) == null && countNeighbors(point.x, point.y) == 3) {
             return new Life(point.x, point.y);
         } else {
@@ -53,7 +52,7 @@ public class Field {
         }
     }
 
-    Life saveLife(Life life) {
+    Life regulatePopulationDensity(Life life) {
         int neighbors = countNeighbors(life.x, life.y);
         if (neighbors != 2 && neighbors != 3) {
             life = null;
@@ -62,12 +61,6 @@ public class Field {
         return life;
     }
 
-    /**
-     * 指定されたセルに隣接するセルのLifeの数を返します。
-     * @param col
-     * @param row
-     * @return
-     */
     int countNeighbors(int col, int row) {
         Life life = new Life(col, row);
         Lives neighbors = new Lives();
@@ -85,36 +78,31 @@ public class Field {
     public Life getLifeAt(int col, int row) {
         try {
             return cells[col][row];
-        } catch (Exception e) {
+        } catch (ArrayIndexOutOfBoundsException e) {
             return null;
         }
     }
 
+    /**
+     * This method return true if life was set to cell.
+     * If specified cell is not empty, return false.
+     */
     boolean setLifeAt(Life life) {
-        return setLifeAt(life.x, life.y, life);
-    }
-
-    boolean setLifeAt(int col, int row, Life life) {
-        try {
-            if (null != cells[col][row]) {
-                return false;
-            }
-        } catch (Exception e) {
+        if (life.x < 0 || maxCol < life.x || life.y < 0 || maxRow < life.y || null != cells[life.x][life.y]) {
             return false;
         }
 
-        cells[col][row] = life;
-
+        cells[life.x][life.y] = life;
         return true;
     }
-
-    class Lives extends Vector {
-        public boolean add(Object o) {
-            if (null == o) {
+    
+    class Lives extends ArrayList<Life> {
+        public boolean add(Life life) {
+            if (null == life) {
                 return true;
             }
 
-            return super.add(o);
+            return super.add(life);
         }
     }
 }
